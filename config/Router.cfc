@@ -23,6 +23,13 @@ component {
 		 *
 		 */
 
+		// Solana API Endpoints
+		get( "/api/solana/account/balance/:publicKey", "solana.account.getBalance" );
+		get( "/api/solana/account/info/:publicKey", "solana.account.getAccountInfo" );
+
+		post( "/api/solana/transaction/airdrop", "solana.transaction.requestAirdrop" );
+		get( "/api/solana/transaction/:signature", "solana.transaction.getTransaction" );
+
 		// Mappings
 		route( ":handler/:action" ).end();
 	}
