@@ -1,2 +1,51 @@
-.env
+# folders part of build we don't need in source control
+modules/*
+coldbox/*
+contentbox-*
+server-start.sh
 
+# Global Ignores
+.DS_Store
+.project
+*.cache.*
+.idea
+web.config
+"Icon\r"
+WEB-INF/**
+.env
+/*.log
+
+# Build Dependencies
+coldbox/*
+artifacts/**
+build/build.number
+build/apidocs/docbox
+build/resources/WEB-INF/*
+build/build-contentbox/**
+build/build-forgebox/**
+build/dependencies
+
+# Logs
+config/logs/**
+
+# Engines + Docker Libraries
+.engines
+bin/.db/**
+tests/resources/dbs/.db/**
+
+# UI Dependencies
+**/node_modules/**
+**/app_modules/**
+**/bower_components/**
+**/app_modules/**
+workbench/app_modules
+
+# webpack working compilation assets
+includes/js
+**/rev-manifest.json
+
+# Testing Dependencies
+testbox/*
+/tests/**/logs/**
+/tests/test-results/*
+tests/resources/patches/tmp/

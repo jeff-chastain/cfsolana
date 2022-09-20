@@ -1,51 +1,50 @@
-version: "3.9"
+version: "3.7"
+
 services:
 
-  # MySQL Server 8
-  contentbox_db:
-    platform: linux/x86_64 # Needed for Mac's on the M1 chip
-    image: mysql:8
-    ports:
-      - "4306:3306"
+  mysql:
+    container_name: cfsolana-mysql
+    image: mysql
+    env_file: ./.env
     environment:
-      MYSQL_DATABASE: "contentbox"
-      MYSQL_ROOT_PASSWORD: "contentbox"
-    volumes:
-      # Store the data locally
-      - .db/mysql8/data:/var/lib/mysql
-      # You can uncomment and it will seed the db with our prepared sql data
-      #- ../tests/resources/sql/mysql:/docker-entrypoint-initdb.d
-
-  # Redis Cache
-  contentbox_cache:
-    platform: linux/x86_64 # Needed for Mac's on the M1 chip
-    image: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - .db/redis:/data
-
-  # ContentBox Site
-  contentbox_app:
-    depends_on:
-      - contentbox_db
-      - contentbox_cache
-    platform: linux/x86_64 # Needed for Mac's on the M1 chip
-    image: ortussolutions/commandbox:lucee5-3.2.1
-    # Environment Variables
-    environment:
-      # Admin passowrd
-      CFCONFIG_ADMINPASSWORD: contentbox
-      DB_HOST: contentbox_db
-      DB_PORT: 4306
-      DB_PASSWORD: contentbox
-      DB_CLASS: com.mysql.cj.jdbc.Driver
-      DB_BUNDLEVERSION: 8.0.19
-      DB_BUNDLENAME: com.mysql.cj
-    # Ports
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_TCP_PORT: ${MYSQL_TCP_PORT}
+    ports: 
+      - "3307:3307"
+ 
+  cf-solana:
+    container_name: cfsolana-lucee
+    build: .
+    tty: true
     ports:
       - "8080:8080"
       - "8443:8443"
-    # Data & Overrides
+    env_file: ./.env
+    environment:
+      DB_BUNDLENAME: ${DB_BUNDLENAME}
+      DB_BUNDLEVERSION: ${DB_BUNDLEVERSION}
+      DB_CLASS: ${DB_CLASS}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_DRIVER: ${DB_DRIVER}
+      DB_HOST: ${DB_HOST}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
     volumes:
-      - ../:/app
+      # - ../config:/app/config
+      # contentbox overwrites our config on new install
+      # we will copy over ours after the install
+      - ../config:/tmp/config:ro
+      - ../handlers:/app/handlers
+      - ../layouts:/app/layouts
+      - ../models:/app/models
+      - ../modules_app:/app/modules_app
+      - ../views:/app/views
+      - ../.cfconfig:/app/.cfconfig
+      - ../Application.cfc:/app/Application.cfc
+      - ../box.json:/app/box.json
+      - ../index.cfm:/app/index.cfm
+      - ../server.json:/app/server.json
