@@ -13,13 +13,18 @@ This is the development repo for [Solana API](https://docs.solana.com/developing
 ### Getting Started
 
 1. Clone this repository down to your computer.
-2. `chmod +x install.sh`
-3. `./install.sh`
-4. Wait a few minutes. The install script is running the full docker setup and the Lucee server can take a few minutes to fully initialize.
-5. Open web browser to `localhost:8080`
-6. Follow through the ContentBox wizard to setup the first user of the CMS.
-7. Use a tool like Postman to query the APIs.
-8. Note: for most API calls you will need to authorize through the User login route, using the username and password signed up with on the ContentBox wizard.
+2. `chmod +x install.sh` (this just makes it executable)
+3. Make sure docker or other container software is running.
+4. `./install.sh`
+5. Wait a few minutes. The install script is running the full docker setup and the Lucee server can take a few minutes to fully initialize.
+6. Open web browser to `localhost:8080`
+7. Follow through the ContentBox wizard to setup the first user of the CMS.
+8. Use a tool like Postman to query the APIs.
+9. Note: for most API calls you will need to authorize through the User login route, using the username and password signed up with on the ContentBox wizard.
+
+**NOTE**:
+
+To support Apple M1 chips, we are adding `platform: linux/amd64` to the docker compose for each service.
 
 ## Troubleshooting
 
@@ -42,3 +47,12 @@ This is the development repo for [Solana API](https://docs.solana.com/developing
 **Question**: How do I remove the development docker setup once I am done?
 
 **Answer**: We included a tear down script `cleanup.sh` in the `bin` folder that will tear down everything, including the docker volumes. You can also manually stop the containers by name through Docker.
+
+**Question**: How do I send emails through SMTP on development server?
+
+**Answer**: when running ContentBox in development mode, emails are never sent via SMTP.  They are always logged to the file system. You can find the email logs in the ContentBox installation folder under /config/logs/mail/. When run in production mode, the admin SMTP settings are honored and if not specified, they default back to the CF Admin mail settings.
+
+**Question**: How do I send emails through SMTP on staging or production?
+
+**Answer**: Yes, in production mode ContentBox will send via SMTP and can use any SMTP server that is reachable (i.e. network security, etc.)
+
