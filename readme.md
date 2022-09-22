@@ -12,6 +12,7 @@ This is the development repo for [Solana API](https://docs.solana.com/developing
 
 ### Getting Started
 
+0. Copy `.env.sample` to `bin/.env`
 1. Clone this repository down to your computer.
 2. `chmod +x install.sh` (this just makes it executable)
 3. Make sure docker or other container software is running.
