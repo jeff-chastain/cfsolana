@@ -8,7 +8,7 @@ services:
     platform: linux/x86_64 # Needed for Mac's on the M1 chip
     image: mysql:8
     ports: 
-      - "3307:3307"
+      - "3306:3306"
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USER}
@@ -34,7 +34,7 @@ services:
   lucee:
     container_name: cfsolana-lucee
     platform: linux/x86_64 # Needed for Mac's on the M1 chip
-    image: ortussolutions/contentbox
+    image: ortussolutions/contentbox:latest-snapshot
     depends_on:
       - mysql
     env_file: ./.env
@@ -78,5 +78,12 @@ services:
       - "8443:8443"
 
     volumes:
+      # Support for custom environment variables and server configuration
+      - ./.env:/app/.env
       - ./.cfconfig.json:/app/.cfconfig.json
+
+      # Importing custom modules for ContentBox ... all custom could should go here
       - ./modules_app:/app/modules_app
+
+      # Mounting the logs folder locally so that we can see the system logs
+      - ./logs:/app/config/logs 
